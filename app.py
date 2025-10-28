@@ -31,7 +31,7 @@ def local_css(file_name):
         with open(file_name) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
     except FileNotFoundError:
-        # Advanced CSS with gradients, animations, and modern styling
+        # Advanced CSS with light theme and professional styling
         st.markdown("""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
@@ -41,9 +41,9 @@ def local_css(file_name):
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         
-        /* --- Animated Background Gradient --- */
+        /* --- Light Background --- */
         .main {
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
             background-attachment: fixed;
         }
         
@@ -51,7 +51,7 @@ def local_css(file_name):
         .hero-title {
             font-size: 3.5em;
             font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -63,7 +63,7 @@ def local_css(file_name):
         
         .hero-subtitle {
             text-align: center;
-            color: #a0aec0;
+            color: #5a6c7d;
             font-size: 1.2em;
             margin-bottom: 30px;
             animation: fadeInUp 0.8s ease-out;
@@ -71,14 +71,13 @@ def local_css(file_name):
         
         /* --- Premium Card Containers --- */
         .card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: #ffffff;
+            border-radius: 16px;
             padding: 35px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
             overflow: hidden;
         }
@@ -90,7 +89,7 @@ def local_css(file_name):
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.05), transparent);
             transition: left 0.7s;
         }
         
@@ -100,31 +99,30 @@ def local_css(file_name):
         
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4), 0 0 0 1px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 12px 40px rgba(74, 144, 226, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08);
         }
         
         /* --- Gradient Card Variant --- */
         .card-gradient {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fc 100%);
+            border-radius: 16px;
             padding: 35px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.12);
+            border: 1px solid rgba(74, 144, 226, 0.15);
+            transition: all 0.3s ease;
         }
         
         .card-gradient:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 12px 40px rgba(74, 144, 226, 0.2);
         }
         
         /* --- Section Headers --- */
         .title-text {
             font-size: 2.8em;
             font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -136,10 +134,10 @@ def local_css(file_name):
         .header-text {
             font-size: 1.9em;
             font-weight: 700;
-            color: #FFFFFF;
+            color: #2c3e50;
             padding-bottom: 12px;
             border-bottom: 3px solid transparent;
-            border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
+            border-image: linear-gradient(90deg, #4A90E2, #357ABD) 1;
             margin-bottom: 20px;
             display: inline-block;
         }
@@ -147,7 +145,7 @@ def local_css(file_name):
         .section-header {
             font-size: 1.5em;
             font-weight: 600;
-            color: #E2E8F0;
+            color: #34495e;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -158,13 +156,13 @@ def local_css(file_name):
         .stButton > button {
             border-radius: 12px;
             border: 2px solid transparent;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
             color: #FFFFFF;
             font-weight: 600;
             font-size: 1.05em;
             padding: 12px 28px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
             position: relative;
             overflow: hidden;
         }
@@ -176,7 +174,7 @@ def local_css(file_name):
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: left 0.5s;
         }
         
@@ -186,8 +184,8 @@ def local_css(file_name):
         
         .stButton > button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
-            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 25px rgba(74, 144, 226, 0.4);
+            background: linear-gradient(135deg, #5ba3f5 0%, #4682c4 100%);
         }
         
         .stButton > button:active {
@@ -196,31 +194,33 @@ def local_css(file_name):
         
         /* --- Danger Button (Delete) --- */
         .stButton > button[kind="primary"] {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             border: 2px solid transparent;
-            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
         }
         
         .stButton > button[kind="primary"]:hover {
-            box-shadow: 0 6px 25px rgba(245, 87, 108, 0.6);
+            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.4);
             transform: translateY(-2px);
+            background: linear-gradient(135deg, #ec6254 0%, #d44638 100%);
         }
         
         /* --- Sidebar Styling --- */
         [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-            border-right: 1px solid rgba(102, 126, 234, 0.2);
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fc 100%);
+            border-right: 1px solid rgba(74, 144, 226, 0.15);
         }
         
         [data-testid="stSidebar"] .title-text {
             font-size: 2em;
+            color: #2c3e50;
         }
         
         /* --- Radio Buttons --- */
         .stRadio > label {
             font-size: 1.1em;
             font-weight: 600;
-            color: #E2E8F0;
+            color: #34495e;
         }
         
         .stRadio > div {
@@ -228,76 +228,78 @@ def local_css(file_name):
         }
         
         .stRadio > div > label {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(74, 144, 226, 0.08);
             padding: 12px 20px;
             border-radius: 12px;
             border: 2px solid transparent;
             transition: all 0.3s ease;
             cursor: pointer;
+            color: #2c3e50;
         }
         
         .stRadio > div > label:hover {
-            background: rgba(102, 126, 234, 0.2);
-            border-color: rgba(102, 126, 234, 0.5);
+            background: rgba(74, 144, 226, 0.15);
+            border-color: rgba(74, 144, 226, 0.3);
             transform: translateX(5px);
         }
         
         /* --- File Uploader --- */
         [data-testid="stFileUploader"] {
-            background: rgba(102, 126, 234, 0.05);
-            border: 2px dashed rgba(102, 126, 234, 0.3);
+            background: rgba(74, 144, 226, 0.03);
+            border: 2px dashed rgba(74, 144, 226, 0.3);
             border-radius: 15px;
             padding: 25px;
             transition: all 0.3s ease;
         }
         
         [data-testid="stFileUploader"]:hover {
-            border-color: rgba(102, 126, 234, 0.6);
-            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(74, 144, 226, 0.5);
+            background: rgba(74, 144, 226, 0.08);
         }
         
         /* --- Text Input --- */
         .stTextInput > div > div > input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(102, 126, 234, 0.3);
+            background: #ffffff;
+            border: 2px solid rgba(74, 144, 226, 0.2);
             border-radius: 12px;
-            color: #FFFFFF;
+            color: #2c3e50;
             padding: 12px 16px;
             font-size: 1.05em;
             transition: all 0.3s ease;
         }
         
         .stTextInput > div > div > input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-            background: rgba(255, 255, 255, 0.08);
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            background: #ffffff;
         }
         
         /* --- Select Box --- */
         .stSelectbox > div > div > div {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(102, 126, 234, 0.3);
+            background: #ffffff;
+            border: 2px solid rgba(74, 144, 226, 0.2);
             border-radius: 12px;
             transition: all 0.3s ease;
         }
         
         .stSelectbox > div > div > div:hover {
-            border-color: rgba(102, 126, 234, 0.6);
+            border-color: rgba(74, 144, 226, 0.4);
         }
         
         /* --- Expander --- */
         .streamlit-expanderHeader {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(74, 144, 226, 0.08);
             border-radius: 12px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(74, 144, 226, 0.15);
             font-weight: 600;
             font-size: 1.05em;
             transition: all 0.3s ease;
+            color: #2c3e50;
         }
         
         .streamlit-expanderHeader:hover {
-            background: rgba(102, 126, 234, 0.2);
-            border-color: rgba(102, 126, 234, 0.4);
+            background: rgba(74, 144, 226, 0.12);
+            border-color: rgba(74, 144, 226, 0.3);
         }
         
         /* --- Info/Warning/Error Boxes --- */
@@ -305,12 +307,12 @@ def local_css(file_name):
             border-radius: 12px;
             border-left: 4px solid;
             padding: 15px 20px;
-            backdrop-filter: blur(10px);
+            background: #ffffff;
         }
         
         /* --- Progress Bar --- */
         .stProgress > div > div > div {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #4A90E2 0%, #357ABD 100%);
             border-radius: 10px;
         }
         
@@ -318,7 +320,7 @@ def local_css(file_name):
         hr {
             border: none;
             height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.5), transparent);
+            background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.3), transparent);
             margin: 30px 0;
         }
         
@@ -360,13 +362,13 @@ def local_css(file_name):
         [data-testid="stImage"] {
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
         
         [data-testid="stImage"]:hover {
             transform: scale(1.02);
-            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.2);
         }
         
         /* --- Badge Styling --- */
@@ -374,40 +376,40 @@ def local_css(file_name):
             display: inline-block;
             padding: 6px 14px;
             border-radius: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
             color: white;
             font-weight: 600;
             font-size: 0.9em;
             margin: 5px;
-            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 10px rgba(74, 144, 226, 0.25);
         }
         
         /* --- Stats Card --- */
         .stat-card {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.08) 0%, rgba(53, 122, 189, 0.08) 100%);
             border-radius: 15px;
             padding: 20px;
             text-align: center;
-            border: 1px solid rgba(102, 126, 234, 0.3);
+            border: 1px solid rgba(74, 144, 226, 0.2);
             transition: all 0.3s ease;
         }
         
         .stat-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 24px rgba(74, 144, 226, 0.2);
         }
         
         .stat-number {
             font-size: 2.5em;
             font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
         .stat-label {
-            color: #a0aec0;
+            color: #5a6c7d;
             font-size: 1em;
             font-weight: 600;
             margin-top: 5px;
@@ -546,7 +548,7 @@ face_model = load_face_analysis_model()
 
 # --- Sidebar Navigation ---
 st.sidebar.markdown('<div class="hero-title" style="font-size: 2.2em; text-align: center; padding: 20px 0;">👨‍🎓 FaceRec Pro</div>', unsafe_allow_html=True)
-st.sidebar.markdown('<p style="text-align: center; color: #a0aec0; font-size: 0.95em; margin-bottom: 25px;">Advanced Recognition System</p>', unsafe_allow_html=True)
+st.sidebar.markdown('<p style="text-align: center; color: #5a6c7d; font-size: 0.95em; margin-bottom: 25px;">Advanced Recognition System</p>', unsafe_allow_html=True)
 
 page = st.sidebar.radio(
     "Navigation",
@@ -602,29 +604,23 @@ if page == "🏠 Home - Recognition":
         st.markdown('</div>', unsafe_allow_html=True)
 
     if uploaded_file is not None:
-        col1, col2 = st.columns(2, gap="large")
+        # Display original image
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">📤 Original Upload</div>', unsafe_allow_html=True)
+        st.image(uploaded_file, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
         
-        with col1:
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-header">📤 Original Upload</div>', unsafe_allow_html=True)
-            st.image(uploaded_file, use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+        # Recognition button
+        if st.button("🔍 Recognize Students", use_container_width=True, type="primary"):
+            with st.spinner("🔄 Processing image... Detecting faces and matching identities..."):
+                pil_image = Image.open(uploaded_file)
+                result_image = recognize_faces(face_model, pil_image)
 
-        with col2:
-            st.markdown('<div class="card" style="display: flex; align-items: center; justify-content: center; min-height: 300px;">', unsafe_allow_html=True)
-            
-            if st.button("🔍 Recognize Students", use_container_width=True, type="primary"):
-                with st.spinner("🔄 Processing image... Detecting faces and matching identities..."):
-                    pil_image = Image.open(uploaded_file)
-                    result_image = recognize_faces(face_model, pil_image)
-
-                if result_image is not None:
-                    st.markdown('<div class="section-header">✅ Recognition Result</div>', unsafe_allow_html=True)
-                    st.image(result_image, use_container_width=True, channels="BGR")
-            else:
-                st.markdown('<p style="text-align: center; color: #a0aec0; font-size: 1.2em;">Click the button above to start recognition</p>', unsafe_allow_html=True)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
+            if result_image is not None:
+                st.markdown('<div class="card">', unsafe_allow_html=True)
+                st.markdown('<div class="section-header">✅ Recognition Result</div>', unsafe_allow_html=True)
+                st.image(result_image, use_container_width=True, channels="BGR")
+                st.markdown('</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -863,8 +859,8 @@ elif page == "ℹ️ About":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Deployment Warning
-    st.markdown('<div class="card" style="border: 2px solid rgba(245, 87, 108, 0.5);">', unsafe_allow_html=True)
-    st.markdown('<div class="header-text" style="color: #f5576c;">⚠️ Important Deployment Notice</div>', unsafe_allow_html=True)
+    st.markdown('<div class="card" style="border: 2px solid rgba(231, 76, 60, 0.3);">', unsafe_allow_html=True)
+    st.markdown('<div class="header-text" style="color: #e74c3c;">⚠️ Important Deployment Notice</div>', unsafe_allow_html=True)
     
     st.error("""
     ### 🔴 Ephemeral Filesystem Warning
