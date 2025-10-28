@@ -649,7 +649,7 @@ if page == "🏠 Home - Recognition":
                 
                 st.markdown("#### ✨ Identification")
                 st.markdown(f"""
-                If the similarity score exceeds **{SIMILARITY_THRESHOLD}**, the system identifies the person and labels them in the image.
+                If the similarity score matches, then the system identifies the person and labels them in the image.
                 """)
         st.markdown('</div>', unsafe_allow_html=True)
 
