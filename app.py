@@ -21,7 +21,7 @@ st.set_page_config(
 KNOWN_FACES_DIR = "known_faces"
 DATABASE_FILE = "database/face_embeddings.pkl"
 MODEL_NAME = 'buffalo_l'
-SIMILARITY_THRESHOLD = 0.5
+SIMILARITY_THRESHOLD = 0.49
 
 # --- HELPER FUNCTIONS (Refactored from your scripts) ---
 
