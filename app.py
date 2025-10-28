@@ -138,7 +138,7 @@ if page == "👨‍🎓 Student Recognition":
         col1, col2 = st.columns(2)
         
         with col1:
-            st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
+            st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
 
         if st.button("🔍 Recognize Students", use_container_width=True):
             with st.spinner("Processing image... This may take a moment."):
@@ -147,7 +147,7 @@ if page == "👨‍🎓 Student Recognition":
 
             if result_image is not None:
                 with col2:
-                    st.image(result_image, caption="Recognition Result", use_column_width=True, channels="BGR")
+                    st.image(result_image, caption="Recognition Result", use_container_width=True, channels="BGR")
 
 elif page == "➕ Manage Database":
     st.title("Manage Student Database")
