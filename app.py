@@ -547,7 +547,7 @@ def remove_student(student_name):
 face_model = load_face_analysis_model()
 
 # --- Sidebar Navigation ---
-st.sidebar.markdown('<div class="hero-title" style="font-size: 2.2em; text-align: center; padding: 20px 0;">👨‍🎓 FaceRec Pro</div>', unsafe_allow_html=True)
+st.sidebar.markdown('<div class="hero-title" style="font-size: 2.2em; text-align: center; padding: 20px 0;">👨‍🎓 Veriface</div>', unsafe_allow_html=True)
 st.sidebar.markdown('<p style="text-align: center; color: #5a6c7d; font-size: 0.95em; margin-bottom: 25px;">Advanced Recognition System</p>', unsafe_allow_html=True)
 
 page = st.sidebar.radio(
@@ -799,7 +799,6 @@ elif page == "ℹ️ About":
     with col2:
         st.markdown(f"""
         #### 🎯 Configuration
-        - **Similarity Threshold:** `{SIMILARITY_THRESHOLD}`
         - **Embedding Dimensions:** `512`
         - **Detection Size:** `640x640`
         - **Processing:** CPU-optimized
@@ -849,7 +848,7 @@ elif page == "ℹ️ About":
     - **Neural Network Architecture**: The buffalo_l model uses a ResNet-based architecture trained on millions of faces
     - **Embedding Space**: Each face is mapped to a 512-dimensional vector where similar faces are close together
     - **Cosine Similarity**: Measures the angle between two vectors, ranging from -1 (opposite) to 1 (identical)
-    - **Threshold Selection**: The {threshold} threshold balances between false positives and false negatives
+    - **Threshold Selection**: The threshold balances between false positives and false negatives
     
     **Why 512 dimensions?** This provides enough capacity to distinguish billions of unique faces while remaining computationally efficient.
     """.format(threshold=SIMILARITY_THRESHOLD))
