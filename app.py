@@ -8,7 +8,7 @@ import insightface
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from PIL import Image
-import shutil  # <-- Added for removing directories
+import shutil
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
@@ -22,7 +22,7 @@ st.set_page_config(
 KNOWN_FACES_DIR = "known_faces"
 DATABASE_FILE = "database/face_embeddings.pkl"
 MODEL_NAME = 'buffalo_l'
-SIMILARITY_THRESHOLD = 0.49 # Tuned based on your last request
+SIMILARITY_THRESHOLD = 0.49
 
 # --- INJECT CUSTOM CSS FOR A "FANCY" LOOK ---
 def local_css(file_name):
@@ -31,66 +31,392 @@ def local_css(file_name):
         with open(file_name) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
     except FileNotFoundError:
-        # Fallback CSS if style.css is not found
+        # Advanced CSS with gradients, animations, and modern styling
         st.markdown("""
         <style>
-        /* --- Card-like Containers --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        /* --- Global Styles --- */
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        /* --- Animated Background Gradient --- */
+        .main {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background-attachment: fixed;
+        }
+        
+        /* --- Hero Header with Gradient Text --- */
+        .hero-title {
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 10px;
+            animation: fadeInDown 0.8s ease-out;
+            letter-spacing: -1px;
+        }
+        
+        .hero-subtitle {
+            text-align: center;
+            color: #a0aec0;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        /* --- Premium Card Containers --- */
         .card {
-            background-color: #262730; /* Streamlit's dark theme container color */
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.7s;
+        }
+        
+        .card:hover::before {
+            left: 100%;
+        }
+        
         .card:hover {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4), 0 0 0 1px rgba(102, 126, 234, 0.3);
         }
-
-        /* --- Custom Titles --- */
+        
+        /* --- Gradient Card Variant --- */
+        .card-gradient {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.4s ease;
+        }
+        
+        .card-gradient:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* --- Section Headers --- */
         .title-text {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #FAFAFA; /* Streamlit's default light text */
-            padding-bottom: 10px;
+            font-size: 2.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            animation: fadeInLeft 0.6s ease-out;
         }
         
         .header-text {
-            font-size: 1.75em;
-            font-weight: bold;
-            color: #FAFAFA;
-            padding-bottom: 10px;
+            font-size: 1.9em;
+            font-weight: 700;
+            color: #FFFFFF;
+            padding-bottom: 12px;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
+            margin-bottom: 20px;
+            display: inline-block;
         }
         
-        /* --- Make buttons pop more --- */
+        .section-header {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #E2E8F0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* --- Premium Buttons --- */
         .stButton > button {
-            border-radius: 8px;
-            border: 2px solid #FF4B4B; /* Streamlit's primary color */
-            color: #FF4B4B;
-            background-color: transparent;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 1.05em;
+            padding: 12px 28px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stButton > button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .stButton > button:hover::before {
+            left: 100%;
+        }
+        
+        .stButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .stButton > button:active {
+            transform: translateY(0px);
+        }
+        
+        /* --- Danger Button (Delete) --- */
+        .stButton > button[kind="primary"] {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        }
+        
+        .stButton > button[kind="primary"]:hover {
+            box-shadow: 0 6px 25px rgba(245, 87, 108, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        /* --- Sidebar Styling --- */
+        [data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            border-right: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        [data-testid="stSidebar"] .title-text {
+            font-size: 2em;
+        }
+        
+        /* --- Radio Buttons --- */
+        .stRadio > label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #E2E8F0;
+        }
+        
+        .stRadio > div {
+            gap: 15px;
+        }
+        
+        .stRadio > div > label {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .stRadio > div > label:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateX(5px);
+        }
+        
+        /* --- File Uploader --- */
+        [data-testid="stFileUploader"] {
+            background: rgba(102, 126, 234, 0.05);
+            border: 2px dashed rgba(102, 126, 234, 0.3);
+            border-radius: 15px;
+            padding: 25px;
             transition: all 0.3s ease;
         }
-        .stButton > button:hover {
-            border-color: #FFFFFF;
-            color: #FFFFFF;
-            background-color: #FF4B4B;
+        
+        [data-testid="stFileUploader"]:hover {
+            border-color: rgba(102, 126, 234, 0.6);
+            background: rgba(102, 126, 234, 0.1);
         }
         
-        /* --- Style for the "Delete" button to be more dangerous --- */
-        .stButton > button[kind="primary"] {
-            border: 2px solid #FF4B4B;
-            background-color: #FF4B4B;
+        /* --- Text Input --- */
+        .stTextInput > div > div > input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
             color: #FFFFFF;
+            padding: 12px 16px;
+            font-size: 1.05em;
+            transition: all 0.3s ease;
         }
-        .stButton > button[kind="primary"]:hover {
-            background-color: #FF6B6B;
-            border-color: #FF6B6B;
+        
+        .stTextInput > div > div > input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        /* --- Select Box --- */
+        .stSelectbox > div > div > div {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .stSelectbox > div > div > div:hover {
+            border-color: rgba(102, 126, 234, 0.6);
+        }
+        
+        /* --- Expander --- */
+        .streamlit-expanderHeader {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            font-weight: 600;
+            font-size: 1.05em;
+            transition: all 0.3s ease;
+        }
+        
+        .streamlit-expanderHeader:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+        
+        /* --- Info/Warning/Error Boxes --- */
+        .stInfo, .stWarning, .stError, .stSuccess {
+            border-radius: 12px;
+            border-left: 4px solid;
+            padding: 15px 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* --- Progress Bar --- */
+        .stProgress > div > div > div {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        /* --- Divider --- */
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.5), transparent);
+            margin: 30px 0;
+        }
+        
+        /* --- Animations --- */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* --- Image Styling --- */
+        [data-testid="stImage"] {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        [data-testid="stImage"]:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* --- Badge Styling --- */
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin: 5px;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* --- Stats Card --- */
+        .stat-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            color: #a0aec0;
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 5px;
         }
         </style>
         """, unsafe_allow_html=True)
 
 # Apply the custom CSS
-local_css("style.css") # You can optionally move the CSS to a file named style.css
+local_css("style.css")
 
 
 # --- HELPER FUNCTIONS ---
@@ -99,7 +425,7 @@ local_css("style.css") # You can optionally move the CSS to a file named style.c
 def load_face_analysis_model():
     """Loads the insightface model and caches it."""
     app = insightface.app.FaceAnalysis(name=MODEL_NAME)
-    app.prepare(ctx_id=-1, det_size=(640, 640)) # Use -1 for CPU
+    app.prepare(ctx_id=-1, det_size=(640, 640))
     return app
 
 def build_database(model):
@@ -167,7 +493,6 @@ def recognize_faces(model, uploaded_image):
         st.error("Database is empty. Please add students and rebuild the database.")
         return None
 
-    # Convert PIL Image to OpenCV format
     img = np.array(uploaded_image.convert('RGB'))
     
     unknown_faces = model.get(img)
@@ -187,10 +512,10 @@ def recognize_faces(model, uploaded_image):
         
         if best_match_score > SIMILARITY_THRESHOLD:
             name = known_names[best_match_index]
-            color = (0, 255, 0) # Green
+            color = (0, 255, 0)
         else:
             name = "Unknown"
-            color = (0, 0, 255) # Red
+            color = (0, 0, 255)
             
         label = f"{name}: {best_match_score:.2f}"
         cv2.rectangle(img, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, 2)
@@ -198,14 +523,14 @@ def recognize_faces(model, uploaded_image):
         cv2.rectangle(img, (bbox[0], bbox[1] - h - 10), (bbox[0] + w, bbox[1] - 5), color, -1)
         cv2.putText(img, label, (bbox[0], bbox[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-    return cv2.cvtColor(img, cv2.COLOR_RGB2BGR) # Convert back for display
+    return cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
 def remove_student(student_name):
     """Removes a student's directory and all their photos."""
     student_dir = os.path.join(KNOWN_FACES_DIR, student_name)
     if os.path.exists(student_dir):
         try:
-            shutil.rmtree(student_dir) # Recursively delete the folder and all its contents
+            shutil.rmtree(student_dir)
             return True
         except Exception as e:
             st.error(f"Error deleting student folder: {e}")
@@ -220,176 +545,371 @@ def remove_student(student_name):
 face_model = load_face_analysis_model()
 
 # --- Sidebar Navigation ---
-st.sidebar.markdown('<div class="title-text" style="font-size: 1.75em; text-align: center; padding-bottom: 20px;">👨‍🎓 FaceRec Pro</div>', unsafe_allow_html=True)
-page = st.sidebar.radio("Main Navigation", ["🏠 Home - Recognition", "🗃️ Manage Database", "ℹ️ About"], label_visibility="collapsed")
+st.sidebar.markdown('<div class="hero-title" style="font-size: 2.2em; text-align: center; padding: 20px 0;">👨‍🎓 FaceRec Pro</div>', unsafe_allow_html=True)
+st.sidebar.markdown('<p style="text-align: center; color: #a0aec0; font-size: 0.95em; margin-bottom: 25px;">Advanced Recognition System</p>', unsafe_allow_html=True)
+
+page = st.sidebar.radio(
+    "Navigation",
+    ["🏠 Home - Recognition", "🗃️ Manage Database", "ℹ️ About"],
+    label_visibility="collapsed"
+)
+
 st.sidebar.markdown("---")
-st.sidebar.info("This app uses InsightFace for high-accuracy face recognition. Manage your student database or run recognition on a class photo.")
+st.sidebar.markdown('<div class="card" style="padding: 20px; margin: 15px 0;">', unsafe_allow_html=True)
+st.sidebar.markdown("### 🎯 Quick Info")
+st.sidebar.info("This app uses **InsightFace** with the Buffalo_L model for high-accuracy face recognition. Manage your student database or run recognition on class photos.", icon="💡")
+st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
-
-# --- Page 1: Home - Student Recognition ---
-if page == "🏠 Home - Recognition":
-    st.markdown('<div class="title-text">Student Face Recognition</div>', unsafe_allow_html=True)
-    st.write("Upload a class photo and the system will identify all known students based on your database.")
-
-    uploaded_file = st.file_uploader("Upload an image for recognition", type=["jpg", "png", "jpeg"], label_visibility="collapsed")
-
-    if uploaded_file is not None:
-        col1, col2 = st.columns(2)
+# Database stats in sidebar
+if os.path.exists(DATABASE_FILE):
+    try:
+        with open(DATABASE_FILE, "rb") as f:
+            known_faces_data = pickle.load(f)
+        total_embeddings = len(known_faces_data["names"])
+        unique_students = len(set(known_faces_data["names"]))
         
-        with col1:
-            st.markdown('<div class="header-text">Original Upload</div>', unsafe_allow_html=True)
-            st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
+        st.sidebar.markdown('<div class="stat-card">', unsafe_allow_html=True)
+        st.sidebar.markdown(f'<div class="stat-number">{unique_students}</div>', unsafe_allow_html=True)
+        st.sidebar.markdown(f'<div class="stat-label">Students in Database</div>', unsafe_allow_html=True)
+        st.sidebar.markdown('</div>', unsafe_allow_html=True)
+        
+        st.sidebar.markdown('<div class="stat-card">', unsafe_allow_html=True)
+        st.sidebar.markdown(f'<div class="stat-number">{total_embeddings}</div>', unsafe_allow_html=True)
+        st.sidebar.markdown(f'<div class="stat-label">Total Face Embeddings</div>', unsafe_allow_html=True)
+        st.sidebar.markdown('</div>', unsafe_allow_html=True)
+    except:
+        pass
 
-        if st.button("🔍 Recognize Students", use_container_width=True, type="primary"):
-            with st.spinner("Processing image... This may take a moment."):
-                pil_image = Image.open(uploaded_file)
-                result_image = recognize_faces(face_model, pil_image)
 
-            if result_image is not None:
-                with col2:
-                    st.markdown('<div class="header-text">Recognition Result</div>', unsafe_allow_html=True)
-                    st.image(result_image, caption="Recognition Result", use_container_width=True, channels="BGR")
+# --- Page 1: Home - Recognition ---
+if page == "🏠 Home - Recognition":
+    # Hero Section
+    st.markdown('<div class="hero-title">Student Face Recognition</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-subtitle">🎓 Upload a class photo and instantly identify all registered students</div>', unsafe_allow_html=True)
     
     st.markdown("---")
-    with st.expander("ℹ️ How does this work?"):
-        st.markdown("""
-        1.  **Detection:** The system first scans the image to find all faces using the `buffalo_l` detection model.
-        2.  **Embedding:** For each detected face, it generates a 512-dimension "face embedding" (a unique mathematical signature).
-        3.  **Comparison:** It compares this new embedding to all the pre-calculated embeddings in the `face_embeddings.pkl` database using Cosine Similarity.
-        4.  **Identification:** If a comparison score is higher than the set threshold (currently `0.49`), the name from the database is drawn on the face.
-        """)
+    
+    # Main content container
+    with st.container():
+        st.markdown('<div class="card-gradient">', unsafe_allow_html=True)
+        
+        uploaded_file = st.file_uploader(
+            "📸 Drop your image here or click to browse", 
+            type=["jpg", "png", "jpeg"],
+            label_visibility="visible"
+        )
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    if uploaded_file is not None:
+        col1, col2 = st.columns(2, gap="large")
+        
+        with col1:
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+            st.markdown('<div class="section-header">📤 Original Upload</div>', unsafe_allow_html=True)
+            st.image(uploaded_file, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        with col2:
+            st.markdown('<div class="card" style="display: flex; align-items: center; justify-content: center; min-height: 300px;">', unsafe_allow_html=True)
+            
+            if st.button("🔍 Recognize Students", use_container_width=True, type="primary"):
+                with st.spinner("🔄 Processing image... Detecting faces and matching identities..."):
+                    pil_image = Image.open(uploaded_file)
+                    result_image = recognize_faces(face_model, pil_image)
+
+                if result_image is not None:
+                    st.markdown('<div class="section-header">✅ Recognition Result</div>', unsafe_allow_html=True)
+                    st.image(result_image, use_container_width=True, channels="BGR")
+            else:
+                st.markdown('<p style="text-align: center; color: #a0aec0; font-size: 1.2em;">Click the button above to start recognition</p>', unsafe_allow_html=True)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # Info section
+    with st.container():
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        with st.expander("💡 How does this work?", expanded=False):
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### 🔍 Detection Phase")
+                st.markdown("""
+                The system scans the uploaded image using the **buffalo_l** detection model to locate all faces with high precision.
+                """)
+                
+                st.markdown("#### 🧬 Embedding Generation")
+                st.markdown("""
+                Each detected face is converted into a **512-dimensional vector** (embedding) that represents unique facial features.
+                """)
+            
+            with col2:
+                st.markdown("#### 📊 Similarity Comparison")
+                st.markdown("""
+                The new embeddings are compared against the database using **Cosine Similarity** to find the closest matches.
+                """)
+                
+                st.markdown("#### ✨ Identification")
+                st.markdown(f"""
+                If the similarity score exceeds **{SIMILARITY_THRESHOLD}**, the system identifies the person and labels them in the image.
+                """)
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Page 2: Manage Database ---
 elif page == "🗃️ Manage Database":
-    st.markdown('<div class="title-text">Manage Student Database</div>', unsafe_allow_html=True)
-    st.write("Add new students, remove existing ones, or rebuild the entire face embedding database.")
+    st.markdown('<div class="hero-title">Manage Student Database</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-subtitle">🎯 Add students, remove entries, or rebuild the recognition database</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # --- Split layout into two columns for better organization ---
-    col1, col2 = st.columns([1.5, 1]) # Make first column wider
+    col1, col2 = st.columns([1.6, 1], gap="large")
     
     with col1:
-        # --- Card 1: Add or Remove Students ---
+        # Add Student Section
         st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<div class="header-text">Add a New Student</div>', unsafe_allow_html=True)
+        st.markdown('<div class="header-text">➕ Add New Student</div>', unsafe_allow_html=True)
         
-        new_student_name = st.text_input("Enter the student's name (this will be the folder name):")
-        uploaded_photos = st.file_uploader("Upload photos (at least one clear photo):", 
-                                           accept_multiple_files=True, type=["jpg", "png", "jpeg"])
+        new_student_name = st.text_input(
+            "Student Name",
+            placeholder="e.g., John Doe",
+            help="This will be used as the folder name and display name"
+        )
+        
+        uploaded_photos = st.file_uploader(
+            "📷 Upload Student Photos (Multiple images recommended)", 
+            accept_multiple_files=True, 
+            type=["jpg", "png", "jpeg"],
+            help="Upload at least one clear, front-facing photo"
+        )
 
-        if st.button("➕ Add Student to Folder", use_container_width=True):
+        if st.button("✨ Add Student to Database", use_container_width=True):
             if new_student_name and uploaded_photos:
                 student_dir = os.path.join(KNOWN_FACES_DIR, new_student_name)
                 os.makedirs(student_dir, exist_ok=True)
                 
                 saved_count = 0
+                progress_bar = st.progress(0)
                 for i, photo in enumerate(uploaded_photos):
                     try:
                         img = Image.open(photo)
-                        # Create a standardized file name
                         img.save(os.path.join(student_dir, f"{new_student_name.lower().replace(' ', '_')}_{i+1}.png"))
                         saved_count += 1
+                        progress_bar.progress((i + 1) / len(uploaded_photos))
                     except Exception as e:
                         st.error(f"Error saving file {photo.name}: {e}")
                 
-                st.success(f"Successfully added {saved_count} photos for '{new_student_name}'.")
-                st.info("Remember to rebuild the database to include these new images!")
+                progress_bar.empty()
+                st.success(f"🎉 Successfully added **{saved_count}** photos for '{new_student_name}'!")
+                st.info("⚠️ Remember to **rebuild the database** to include these new images!", icon="💾")
             else:
-                st.error("Please provide a name and at least one photo.")
+                st.error("❌ Please provide a student name and at least one photo.")
         
-        st.divider()
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
 
-        # --- NEW: Remove Student Section ---
-        st.markdown('<div class="header-text">Remove an Existing Student</div>', unsafe_allow_html=True)
+        # Remove Student Section
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<div class="header-text">🗑️ Remove Existing Student</div>', unsafe_allow_html=True)
         
         if os.path.exists(KNOWN_FACES_DIR):
             student_list = [name for name in os.listdir(KNOWN_FACES_DIR) if os.path.isdir(os.path.join(KNOWN_FACES_DIR, name))]
             if not student_list:
-                st.info("The 'known_faces' directory is empty. No students to remove.")
+                st.info("📂 The 'known_faces' directory is empty. No students to remove.", icon="ℹ️")
             else:
-                student_to_remove = st.selectbox("Select student to remove:", options=[""] + student_list)
+                student_to_remove = st.selectbox(
+                    "Select student to remove:",
+                    options=[""] + sorted(student_list),
+                    help="Choose a student to permanently delete from the database"
+                )
 
                 if st.button("🔥 Delete Student Permanently", use_container_width=True, type="primary"):
                     if student_to_remove:
-                        with st.spinner(f"Removing '{student_to_remove}'..."):
+                        with st.spinner(f"🗑️ Removing '{student_to_remove}'..."):
                             if remove_student(student_to_remove):
-                                st.success(f"Successfully removed '{student_to_remove}'.")
-                                st.warning("IMPORTANT: You must rebuild the database to finalize this change.", icon="⚠️")
-                                st.experimental_rerun() # Force rerun to update the selectbox
+                                st.success(f"✅ Successfully removed '{student_to_remove}'.")
+                                st.warning("⚠️ **IMPORTANT:** You must rebuild the database to finalize this change!", icon="🔄")
+                                st.experimental_rerun()
                     else:
-                        st.error("Please select a student to remove.")
+                        st.error("❌ Please select a student to remove.")
         else:
-            st.info("The 'known_faces' directory has not been created yet.")
+            st.info("📂 The 'known_faces' directory has not been created yet.", icon="ℹ️")
             
-        st.markdown('</div>', unsafe_allow_html=True) # End card
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
-        # --- Card 2: Database Maintenance ---
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<div class="header-text">Database Maintenance</div>', unsafe_allow_html=True)
+        # Database Maintenance Section
+        st.markdown('<div class="card-gradient">', unsafe_allow_html=True)
+        st.markdown('<div class="header-text">🔧 Database Maintenance</div>', unsafe_allow_html=True)
         
-        st.warning("You **must** rebuild the database after adding or removing any students for changes to take effect.", icon="⚠️")
+        st.warning("⚠️ You **must** rebuild the database after adding or removing any students for changes to take effect.", icon="🔄")
         
         if st.button("🔄 Rebuild Database", use_container_width=True):
-            with st.spinner("Rebuilding database... This may take a while."):
+            with st.spinner("⚙️ Rebuilding database... This may take a while."):
                 if build_database(face_model):
-                    st.success("Face database rebuilt successfully!")
+                    st.success("🎉 Face database rebuilt successfully!")
+                    st.balloons()
                 else:
-                    st.error("Database build failed. Check logs or add student data.")
+                    st.error("❌ Database build failed. Check logs or add student data.")
         
-        st.divider()
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
 
-        # --- Section to View Current Students ---
-        with st.expander("📂 View Current Students in Folder"):
-            if os.path.exists(KNOWN_FACES_DIR):
-                student_list = [name for name in os.listdir(KNOWN_FACES_DIR) if os.path.isdir(os.path.join(KNOWN_FACES_DIR, name))]
-                if student_list:
-                    for student in sorted(student_list):
-                        st.markdown(f"- `{student}`")
-                else:
-                    st.write("No students found in the 'known_faces' directory.")
-            else:
-                st.write("The 'known_faces' directory has not been created yet.")
+        # View Current Students Section
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<div class="header-text">👥 Current Students</div>', unsafe_allow_html=True)
         
-        st.markdown('</div>', unsafe_allow_html=True) # End card
+        if os.path.exists(KNOWN_FACES_DIR):
+            student_list = [name for name in os.listdir(KNOWN_FACES_DIR) if os.path.isdir(os.path.join(KNOWN_FACES_DIR, name))]
+            if student_list:
+                st.markdown(f'<div class="stat-card"><div class="stat-number">{len(student_list)}</div><div class="stat-label">Registered Students</div></div>', unsafe_allow_html=True)
+                
+                with st.expander("📋 View Full Student List", expanded=True):
+                    for i, student in enumerate(sorted(student_list), 1):
+                        st.markdown(f'<span class="badge">{i}. {student}</span>', unsafe_allow_html=True)
+            else:
+                st.info("📂 No students found in the 'known_faces' directory.", icon="ℹ️")
+        else:
+            st.info("📂 The 'known_faces' directory has not been created yet.", icon="ℹ️")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 # --- Page 3: About ---
 elif page == "ℹ️ About":
-    st.markdown('<div class="title-text">About This Project</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-title">About This Project</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-subtitle">🚀 Advanced AI-powered face recognition system</div>', unsafe_allow_html=True)
     
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="header-text">Core Technology</div>', unsafe_allow_html=True)
-    st.markdown(f"""
-    This application is an end-to-end face recognition system built in Python and Streamlit.
+    st.markdown("---")
     
-    -   **Face Detection & Recognition:** `insightface`
-    -   **Backend Model:** `buffalo_l` (A high-accuracy, lightweight model)
-    -   **Comparison Algorithm:** `Cosine Similarity`
-    -   **Similarity Threshold:** `{SIMILARITY_THRESHOLD}` (Scores above this are considered a match)
-    """, unsafe_allow_html=True)
+    # Technology Stack
+    st.markdown('<div class="card-gradient">', unsafe_allow_html=True)
+    st.markdown('<div class="header-text">⚙️ Core Technology Stack</div>', unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        #### 🤖 AI/ML Components
+        - **Face Detection & Recognition:** `insightface`
+        - **Backend Model:** `buffalo_l` (High-accuracy, lightweight)
+        - **Comparison Algorithm:** `Cosine Similarity`
+        - **Framework:** `Streamlit` + `OpenCV`
+        """)
+    
+    with col2:
+        st.markdown(f"""
+        #### 🎯 Configuration
+        - **Similarity Threshold:** `{SIMILARITY_THRESHOLD}`
+        - **Embedding Dimensions:** `512`
+        - **Detection Size:** `640x640`
+        - **Processing:** CPU-optimized
+        """)
+    
     st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
 
+    # Recognition Workflow
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="header-text">Recognition Workflow</div>', unsafe_allow_html=True)
+    st.markdown('<div class="header-text">🔄 Recognition Workflow</div>', unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        ### 📥 Phase 1: Database Build
+        
+        1. **Image Collection** - System scans all images in the `known_faces/` directory
+        2. **Face Detection** - Locates faces in each image using buffalo_l
+        3. **Embedding Generation** - Creates 512-D vectors for each face
+        4. **Storage** - Saves all embeddings to `face_embeddings.pkl`
+        """)
+    
+    with col2:
+        st.markdown("""
+        ### 🔍 Phase 2: Live Recognition
+        
+        1. **Upload Processing** - Detect faces in the new photo
+        2. **Feature Extraction** - Generate embeddings for detected faces
+        3. **Similarity Matching** - Compare against database using cosine similarity
+        4. **Identification** - Label faces with names if score exceeds threshold
+        """)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Technical Details
+    st.markdown('<div class="card-gradient">', unsafe_allow_html=True)
+    st.markdown('<div class="header-text">🧠 How Face Recognition Works</div>', unsafe_allow_html=True)
+    
     st.markdown("""
-    1.  **Database Build:** When you 'Rebuild Database', the system scans all images in the `known_faces` directory. For each face, it generates a 512-dimension mathematical vector (an "embedding") and stores it in the `database/face_embeddings.pkl` file.
-    2.  **Live Recognition:** When you upload a new photo, the system detects all faces and generates new embeddings for them.
-    3.  **Matching:** Each new embedding is compared against *every* embedding in the database. The system finds the "closest" match and, if the similarity score is above the threshold, identifies the person.
-    """)
+    Face recognition is achieved through deep learning models that transform facial images into mathematical representations:
+    
+    - **Neural Network Architecture**: The buffalo_l model uses a ResNet-based architecture trained on millions of faces
+    - **Embedding Space**: Each face is mapped to a 512-dimensional vector where similar faces are close together
+    - **Cosine Similarity**: Measures the angle between two vectors, ranging from -1 (opposite) to 1 (identical)
+    - **Threshold Selection**: The {threshold} threshold balances between false positives and false negatives
+    
+    **Why 512 dimensions?** This provides enough capacity to distinguish billions of unique faces while remaining computationally efficient.
+    """.format(threshold=SIMILARITY_THRESHOLD))
+    
     st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="header-text">Deployment Warning ⚠️</div>', unsafe_allow_html=True)
+    # Deployment Warning
+    st.markdown('<div class="card" style="border: 2px solid rgba(245, 87, 108, 0.5);">', unsafe_allow_html=True)
+    st.markdown('<div class="header-text" style="color: #f5576c;">⚠️ Important Deployment Notice</div>', unsafe_allow_html=True)
+    
     st.error("""
-    **This app runs on an ephemeral filesystem.**
+    ### 🔴 Ephemeral Filesystem Warning
     
-    This means any students added or removed via this web interface are **TEMPORARY**. The app's container will be reset (deleting all changes) if it restarts or goes to sleep.
+    **This app runs on an ephemeral (temporary) filesystem.**
     
-    **To make permanent changes:**
-    1.  Run this app on your **local computer**.
-    2.  Add/Remove students and rebuild the database locally.
-    3.  Push the updated `known_faces/` folder and `database/face_embeddings.pkl` file to your GitHub repository.
-    """)
+    Any students added or removed via this web interface are **TEMPORARY**. The app's container will be reset upon restart, deleting all changes.
+    
+    ### ✅ To make permanent changes:
+    
+    1. **Run locally** - Clone and run this app on your personal computer
+    2. **Make changes** - Add/remove students and rebuild the database locally
+    3. **Push to repository** - Upload the updated `known_faces/` folder and `database/face_embeddings.pkl` to your Git repository
+    4. **Redeploy** - Your changes will persist in the deployed version
+    
+    ### 💾 For production use:
+    
+    Consider integrating with cloud storage (AWS S3, Google Cloud Storage) or a persistent database to maintain student data across restarts.
+    """, icon="🚨")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Credits & Resources
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown('<div class="header-text">🙏 Credits & Resources</div>', unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        ### 📚 Libraries Used
+        - **InsightFace** - Face detection and recognition
+        - **OpenCV** - Image processing
+        - **Streamlit** - Web application framework
+        - **scikit-learn** - Similarity computations
+        """)
+    
+    with col2:
+        st.markdown("""
+        ### 🔗 Useful Links
+        - [InsightFace Documentation](https://github.com/deepinsight/insightface)
+        - [Streamlit Docs](https://docs.streamlit.io)
+        - [Face Recognition Papers](https://paperswithcode.com/task/face-recognition)
+        """)
+    
     st.markdown('</div>', unsafe_allow_html=True)
